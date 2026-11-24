@@ -11,6 +11,8 @@
     out.push({name:f.split('/').pop(), type:b.type, buf:await b.arrayBuffer()});
   }
   document.getElementById('s').textContent='fetched '+out.length;
-  if(window.opener){ window.opener.postMessage({wakRelay:out}, target); document.getElementById('s').textContent+=' sent'; setTimeout(()=>window.close(),1500);}
+  const tgt=window.opener||(window.parent!==window?window.parent:null);
+  if(tgt){ tgt.postMessage({wakRelay:out}, target); document.getElementById('s').textContent+=' sent'; if(window.opener) setTimeout(()=>window.close(),1500);}
+  if(false){ window.opener.postMessage({wakRelay:out}, target); document.getElementById('s').textContent+=' sent'; setTimeout(()=>window.close(),1500);}
 })();
 </script>
