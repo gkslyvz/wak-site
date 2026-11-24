@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>relay</title>
+<p id="s">loading…</p>
+<script>
+(async()=>{
+  const q=new URLSearchParams(location.search);
+  const files=(q.get('f')||'').split(',').filter(Boolean);
+  const target=q.get('o')||'https://www.instagram.com';
+  const out=[];
+  for(const f of files){
+    const r=await fetch('/media/'+f); const b=await r.blob();
+    out.push({name:f.split('/').pop(), type:b.type, buf:await b.arrayBuffer()});
+  }
+  document.getElementById('s').textContent='fetched '+out.length;
+  if(window.opener){ window.opener.postMessage({wakRelay:out}, target); document.getElementById('s').textContent+=' sent'; setTimeout(()=>window.close(),1500);}
+})();
+</script>
